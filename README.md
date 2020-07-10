@@ -2,7 +2,7 @@
 Expose a directory and it's content via a REST service.
 
 ## Installation
-You need to have git and python 2.7 installed. In addition, you should have virtualenv and pip as well.
+You need to have git and python >=3.5 installed. In addition, you should have virtualenv and pip as well.
 
 The installation script assumes that we're running on Ubuntu/Debian. It installs the packages ```python-pip```, ```python-dev```, ```build-essential``` and ```sqlite3``` if they're not already present. In addition, pip installs ```virtualenv```.
 
@@ -10,12 +10,13 @@ The installation script assumes that we're running on Ubuntu/Debian. It installs
 
 2. Clone this repository by running:
 
-  ```
-  $ git clone git@github.com:magenta-aps/eark-python-bridge.git
-  ```
-  
-3. If the call is successful, it will create a subdirectory ```eark-python-bridge```.
-4. cd into this directory and run:
+       git clone git@github.com:magenta-aps/eark-python-bridge.git
+    
+3. If the call is successful, it will create a subdirectory ```eark-python-bridge```. Create a local config file from the template in this directory:
+
+       cp local_config_template.py local_config.py
+       
+4. Run the install script:
 
   ```
   $ ./install.sh
@@ -50,6 +51,10 @@ The installation script assumes that we're running on Ubuntu/Debian. It installs
 9. Remember to deactivate your virtualenv by running ```deactivate``` when finished.
 
 ## Using the REST API
+
+Note that the `ContentType` of requests must be `application/x-www-form-urlencoded` (added in header):
+
+    Content-Type: application/x-www-form-urlencoded
 
 Using the REST API, it is possible to list and manipulate files. In this section the supported operations are described. In general, all operations are executed using the HTTP POST method with two parameters ```action``` and ```path```. ```action``` should be one of ```list```, ```getcontent```, ```edit```, ```commit```, ```delete```, ```getinfo```, ```copy```, ```move```, ```mkdir```, ```untar```, ```gettree```. ```path``` should be a valid sub path relative to the workspace.
 

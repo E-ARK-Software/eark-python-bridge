@@ -9,6 +9,9 @@ app = Flask(__name__)
 # Add settings in config.py
 app.config.from_pyfile('config.py')
 app.config.from_pyfile('local_config.py')
+
+
+
 db = flask_sqlalchemy.SQLAlchemy(app)
 
 @app.teardown_appcontext

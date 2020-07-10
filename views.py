@@ -58,7 +58,7 @@ class DownloadAPI(flask.views.MethodView):
         w_path = application.app.config['DATA_DIR'] + file_name
         #tenary test for the file paths
         path = d_path if os.path.exists(d_path) else w_path
-        print '\n\n(4)-> the path to download from is: ', path, '\n\n'
+        print('\n\n(4)-> the path to download from is: ', path, '\n\n')
         if os.path.exists(path):
             try:
                 with open(path, 'r') as file:
