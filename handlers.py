@@ -5,6 +5,8 @@ import hashlib
 import json
 import urllib
 import posixpath
+from urllib.parse import urlparse, parse_qs, unquote, quote
+
 import flask
 import os
 import os.path
@@ -92,8 +94,8 @@ class FileManagerHandler(object):
                     success = self._create_preview(path, checksum, filename_wo_ext)
                 if success:
                     return flask.jsonify(
-                        preview_url=request.host_url + urllib.quote(rel_path),
-                        download_url=request.host_url + urllib.quote(download_path)
+                        preview_url=request.host_url + quote(rel_path),
+                        download_url=request.host_url + quote(download_path)
                     )
                 else:
                     return flask.jsonify(
@@ -102,8 +104,8 @@ class FileManagerHandler(object):
                     )
             else:
                 return flask.jsonify(
-                    preview_url=request.host_url + urllib.quote(rel_path),
-                    download_url=request.host_url + urllib.quote(download_path)
+                    preview_url=request.host_url + quote(rel_path),
+                    download_url=request.host_url + quote(download_path)
                 )
         else:
             return flask.jsonify(
@@ -361,7 +363,7 @@ class FileManagerHandler(object):
 
         folders = path.split('/')[1:]
         current_path = os.path.join(prefix_path, folders[0])
-        print current_path
+        print(current_path)
         tree = {'name': os.path.basename(current_path), 'path': '/' + os.path.relpath(current_path, prefix_path),
                 'type': 'folder'}
         current_dict = tree
@@ -467,7 +469,6 @@ class FileManagerHandler(object):
                     error=404,
                     error_text='Not Found'
                 )
-
         return flask.jsonify(error='Not implemented.')
 
     def dispatch(self, request):
@@ -557,9 +558,9 @@ class FileManagerHandler(object):
         :return:
         """
 
-        if request.form['orderStatus']:
+        if 'orderStatus' in request.form and request.form['orderStatus']:
             orderStatus = request.form['orderStatus'].lower()
-            print 'order status is: ', orderStatus
+            print('order status is: ', orderStatus)
             path = self.translate_path(request.form['path'], FileManagerHandler.ORDERSTATUSMAP[orderStatus])
         else:
             path = self.translate_path(request.form['path'])
@@ -581,7 +582,7 @@ class FileManagerHandler(object):
         path = path.split('#', 1)[0]
         # Don't forget explicit trailing slash when normalizing. Issue17324
         # trailing_slash = path.rstrip().endswith('/')
-        path = posixpath.normpath(urllib.unquote(path))
+        path = posixpath.normpath(unquote(path))
         words = path.split('/')
         words = filter(None, words)
         if directory_root:
@@ -596,7 +597,7 @@ class FileManagerHandler(object):
             path = os.path.join(path, word)
         # if trailing_slash:
         #     path += '/'
-        print '====>(2) Translate_path resolving the directory to: ', path
+        print('====>(2) Translate_path resolving the directory to: ', path)
         return path
 
     def translate_paths(self, paths):
@@ -610,7 +611,7 @@ class FileManagerHandler(object):
             path = path.split('#', 1)[0]
             # Don't forget explicit trailing slash when normalizing. Issue17324
             # trailing_slash = path.rstrip().endswith('/')
-            path = posixpath.normpath(urllib.unquote(path))
+            path = posixpath.normpath(unquote(path))
             words = path.split('/')
             words = filter(None, words)
             path = application.app.config['WORKING_DIR']
